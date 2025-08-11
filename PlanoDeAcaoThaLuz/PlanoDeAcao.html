@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Ação Interativo: Marca de Joias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm & Collected (Warm neutrals with a subtle accent) -->
+    <!-- Application Structure Plan: A single-page application with top navigation to switch between content sections for each of the 4 phases, a progress tracker, and a final checklist. This non-linear structure enhances usability and makes the dense plan easier to digest and discuss compared to a linear document. -->
+    <!-- Visualization & Content Choices: Personas are in visual cards. Content pillars (Fase 3) are a Chart.js donut chart. The new progress section uses interactive HTML/CSS progress bars updated with JS sliders. Customer journey (Fase 4) is a CSS-based flow diagram. Next steps are an interactive checklist. These choices transform static text into engaging, easily understandable visual elements. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        .nav-button.active {
+            background-color: #D6C3B3;
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+        .nav-button:not(.active):hover {
+            background-color: #EFEBE7;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #EFEBE7;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .progress-bar-bg {
+            background-color: #EFEBE7;
+            border-radius: 9999px;
+            height: 1.25rem;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background-color: #D6C3B3;
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.5s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        input[type=range] {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 100%;
+          height: 8px;
+          background: #EFEBE7;
+          border-radius: 5px;
+          outline: none;
+          opacity: 0.7;
+          transition: opacity .2s;
+        }
+        input[type=range]:hover {
+          opacity: 1;
+        }
+        input[type=range]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          background: #857262;
+          cursor: pointer;
+          border-radius: 50%;
+        }
+        input[type=range]::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          background: #857262;
+          cursor: pointer;
+          border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-[#4A4A4A]">Plano de Ação Interativo</h1>
+            <p class="text-lg text-[#857262] mt-2">Um guia para o lançamento e crescimento da sua marca de joias</p>
+        </header>
+
+        <nav class="flex flex-wrap justify-center gap-2 md:gap-4 mb-12">
+            <button data-target="fase1" class="nav-button active text-sm md:text-base px-4 py-2 rounded-full">Fase 1: Estratégia</button>
+            <button data-target="fase2" class="nav-button text-sm md:text-base px-4 py-2 rounded-full">Fase 2: Presença Digital</button>
+            <button data-target="fase3" class="nav-button text-sm md:text-base px-4 py-2 rounded-full">Fase 3: Conteúdo</button>
+            <button data-target="fase4" class="nav-button text-sm md:text-base px-4 py-2 rounded-full">Fase 4: Vendas</button>
+            <button data-target="evolucao" class="nav-button text-sm md:text-base px-4 py-2 rounded-full">Evolução</button>
+            <button data-target="passos" class="nav-button text-sm md:text-base px-4 py-2 rounded-full">Próximos Passos</button>
+        </nav>
+
+        <main>
+            <!-- Fase 1: Fundamento e Estratégia -->
+            <section id="fase1" class="content-section active">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-[#857262]">Fundamento e Estratégia</h2>
+                    <p class="mt-2 max-w-2xl mx-auto">Esta fase constrói a base para todas as ações futuras, garantindo que a marca tenha uma voz clara e um público bem definido.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card">
+                        <h3 class="font-bold text-lg mb-4">1. Definição de Personas</h3>
+                        <div class="space-y-6">
+                            <div class="p-4 bg-[#FDFBF8] rounded-lg border border-[#EFEBE7]">
+                                <p class="font-bold text-base text-[#857262]">👤 Persona 1: Sofia, a Minimalista (28 anos)</p>
+                                <p class="text-sm mt-2"><b>Quem é:</b> Arquiteta que aprecia design, qualidade e peças versáteis.</p>
+                                <p class="text-sm mt-1"><b>Onde está:</b> Instagram, Pinterest, blogs de moda.</p>
+                                <p class="text-sm mt-1"><b>O que busca:</b> Joias discretas, elegantes e duráveis para investir.</p>
+                            </div>
+                            <div class="p-4 bg-[#FDFBF8] rounded-lg border border-[#EFEBE7]">
+                                <p class="font-bold text-base text-[#857262]">👤 Persona 2: Lucas, o Estiloso (32 anos)</p>
+                                <p class="text-sm mt-2"><b>Quem é:</b> Músico ou publicitário, antenado com tendências.</p>
+                                <p class="text-sm mt-1"><b>Onde está:</b> Instagram, TikTok, YouTube.</p>
+                                <p class="text-sm mt-1"><b>O que busca:</b> Acessórios que expressem sua personalidade.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="font-bold text-lg mb-4">2. Proposta Única de Valor (PUV)</h3>
+                        <p class="mb-4">Por que um cliente deveria comprar de você? A PUV é o seu grande diferencial.</p>
+                        <ul class="space-y-3 list-inside">
+                            <li class="flex items-start"><span class="text-[#D6C3B3] mr-2">✔</span> É o design exclusivo?</li>
+                            <li class="flex items-start"><span class="text-[#D6C3B3] mr-2">✔</span> É a qualidade da Prata 925 com garantia?</li>
+                            <li class="flex items-start"><span class="text-[#D6C3B3] mr-2">✔</span> É o atendimento personalizado via WhatsApp?</li>
+                            <li class="flex items-start"><span class="text-[#D6C3B3] mr-2">✔</span> É a experiência de "unboxing" memorável?</li>
+                        </ul>
+                        <div class="mt-6 p-4 bg-[#FDFBF8] rounded-lg border border-[#EFEBE7]">
+                            <p class="font-bold text-sm text-[#857262]">Ação Sugerida:</p>
+                            <p class="text-sm mt-1 italic">"Criamos joias de Prata 925 com design atemporal e atendimento próximo, para quem busca elegância e durabilidade no dia a dia."</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fase 2: Construção da Presença Digital -->
+            <section id="fase2" class="content-section">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-[#857262]">Construção da Presença Digital</h2>
+                    <p class="mt-2 max-w-2xl mx-auto">Com a estratégia definida, o próximo passo é montar a "vitrine" online da marca de forma profissional e coesa.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="card text-center">
+                        <p class="text-3xl mb-2">🌐</p>
+                        <h3 class="font-bold text-lg mb-2">Website (Hostinger)</h3>
+                        <ul class="text-sm text-left space-y-2 list-inside">
+                            <li><b>Foco em Fotos:</b> Imagens de alta qualidade são essenciais.</li>
+                            <li><b>Descrições Claras:</b> Detalhar material, dimensões e cuidados.</li>
+                            <li><b>Páginas Essenciais:</b> Home, Loja, Sobre, Contato, FAQ.</li>
+                            <li><b>Otimização para Celular:</b> Garantir experiência perfeita em smartphones.</li>
+                        </ul>
+                    </div>
+                    <div class="card text-center">
+                        <p class="text-3xl mb-2">📸</p>
+                        <h3 class="font-bold text-lg mb-2">Instagram</h3>
+                        <ul class="text-sm text-left space-y-2 list-inside">
+                            <li><b>BIO Otimizada:</b> Clara, com PUV e link para contato.</li>
+                            <li><b>Destaques Organizados:</b> "Cuidados", "FAQ", "Clientes".</li>
+                            <li><b>Link na Bio:</b> Agregador de links (Linktree, etc).</li>
+                            <li><b>Identidade Visual:</b> Cores e fontes consistentes.</li>
+                        </ul>
+                    </div>
+                    <div class="card text-center">
+                        <p class="text-3xl mb-2">💬</p>
+                        <h3 class="font-bold text-lg mb-2">WhatsApp Business</h3>
+                        <ul class="text-sm text-left space-y-2 list-inside">
+                            <li><b>Perfil Comercial:</b> Logo, site, horário de atendimento.</li>
+                            <li><b>Catálogo de Produtos:</b> Para atendimento ágil e profissional.</li>
+                            <li><b>Mensagens Automáticas:</b> Saudações e mensagens de ausência.</li>
+                            <li><b>Atendimento Pessoal:</b> Usar como diferencial competitivo.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fase 3: Atração e Engajamento -->
+            <section id="fase3" class="content-section">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-[#857262]">Atração e Engajamento</h2>
+                    <p class="mt-2 max-w-2xl mx-auto">Com a casa arrumada, é hora de atrair visitantes. A estratégia de conteúdo deve ser focada 100% no Instagram no início.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="card">
+                        <h3 class="font-bold text-lg mb-4 text-center">Pilares de Conteúdo</h3>
+                        <div class="chart-container">
+                            <canvas id="contentPillarsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="font-bold text-lg mb-4">Detalhamento dos Pilares</h3>
+                        <div class="space-y-3">
+                            <div class="p-3 bg-[#FDFBF8] rounded-lg">
+                                <p class="font-bold">Produto em Foco (40%)</p>
+                                <p class="text-sm">Reels mostrando o brilho, fotos de alta qualidade em modelos.</p>
+                            </div>
+                            <div class="p-3 bg-[#FDFBF8] rounded-lg">
+                                <p class="font-bold">Educação e Valor (30%)</p>
+                                <p class="text-sm">Posts sobre como limpar a prata, como combinar joias, etc.</p>
+                            </div>
+                             <div class="p-3 bg-[#FDFBF8] rounded-lg">
+                                <p class="font-bold">Bastidores e Conexão (20%)</p>
+                                <p class="text-sm">Mostrar processo de embalagem, bastidores de fotos. Humaniza a marca.</p>
+                            </div>
+                             <div class="p-3 bg-[#FDFBF8] rounded-lg">
+                                <p class="font-bold">Prova Social (10%)</p>
+                                <p class="text-sm">Compartilhar fotos e feedbacks de clientes. É a melhor propaganda.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fase 4: Conversão e Relacionamento -->
+            <section id="fase4" class="content-section">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-[#857262]">Conversão e Relacionamento</h2>
+                    <p class="mt-2 max-w-2xl mx-auto">O objetivo final é transformar o engajamento em resultados concretos: vendas e clientes satisfeitos.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card">
+                        <h3 class="font-bold text-lg mb-4">1. Jornada do Cliente</h3>
+                        <div class="flex flex-col items-center space-y-2">
+                            <div class="p-3 rounded-lg bg-[#EFEBE7] w-full text-center">Descoberta no Instagram 📸</div>
+                            <div class="text-2xl text-[#D6C3B3]">↓</div>
+                            <div class="p-3 rounded-lg bg-[#EFEBE7] w-full text-center">Encantamento pelo Conteúdo ✨</div>
+                            <div class="text-2xl text-[#D6C3B3]">↓</div>
+                            <div class="p-3 rounded-lg bg-[#EFEBE7] w-full text-center">Clique no Link da Bio 🔗</div>
+                            <div class="text-2xl text-[#D6C3B3]">↓</div>
+                            <div class="p-3 rounded-lg bg-[#D6C3B3] text-white w-full text-center font-bold">Compra no Site ou WhatsApp 🛍️</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="font-bold text-lg mb-4">2. Estratégia Inicial de Vendas</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-[#FDFBF8] rounded-lg border-l-4 border-[#D6C3B3]">
+                                <h4 class="font-bold">Oferta de Inauguração</h4>
+                                <p class="text-sm mt-1">Criar uma campanha com oferta clara e tempo limitado (ex: Frete Grátis na primeira semana ou um brinde exclusivo) para gerar urgência e as primeiras vendas.</p>
+                            </div>
+                            <div class="p-4 bg-[#FDFBF8] rounded-lg border-l-4 border-[#D6C3B3]">
+                                <h4 class="font-bold">Atendimento Ativo via WhatsApp</h4>
+                                <p class="text-sm mt-1">Usar o WhatsApp para um atendimento pessoal e consultivo, ajudando o cliente a escolher. Este é um grande diferencial competitivo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Evolução do Plano -->
+            <section id="evolucao" class="content-section">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-[#857262]">Evolução do Plano</h2>
+                    <p class="mt-2 max-w-2xl mx-auto">Acompanhe e atualize o progresso de cada fase do plano de lançamento. Use os controles para marcar a conclusão das tarefas.</p>
+                </div>
+                <div class="max-w-2xl mx-auto card">
+                    <div id="progress-container" class="space-y-6">
+                        <!-- Progress bars will be generated here by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Próximos Passos -->
+            <section id="passos" class="content-section">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-[#857262]">Próximos Passos Imediatos</h2>
+                    <p class="mt-2 max-w-2xl mx-auto">Uma lista de tarefas para colocar o plano em prática e iniciar o lançamento da marca com o pé direito.</p>
+                </div>
+                <div class="max-w-md mx-auto card">
+                    <div class="space-y-4">
+                        <label class="flex items-center p-3 rounded-lg hover:bg-[#FDFBF8] transition-colors cursor-pointer">
+                            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-[#D6C3B3] focus:ring-[#D6C3B3]">
+                            <span class="ml-3 text-gray-700">Definir e detalhar as 2 personas principais da marca.</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-lg hover:bg-[#FDFBF8] transition-colors cursor-pointer">
+                            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-[#D6C3B3] focus:ring-[#D6C3B3]">
+                            <span class="ml-3 text-gray-700">Escrever a Proposta Única de Valor (PUV) em uma única frase.</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-lg hover:bg-[#FDFBF8] transition-colors cursor-pointer">
+                            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-[#D6C3B3] focus:ring-[#D6C3B3]">
+                            <span class="ml-3 text-gray-700">Otimizar a biografia do Instagram seguindo o modelo proposto.</span>
+                        </label>
+                        <label class="flex items-center p-3 rounded-lg hover:bg-[#FDFBF8] transition-colors cursor-pointer">
+                            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-[#D6C3B3] focus:ring-[#D6C3B3]">
+                            <span class="ml-3 text-gray-700">Planejar e produzir o primeiro lote de fotos de alta qualidade.</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navButtons = document.querySelectorAll('.nav-button');
+            const contentSections = document.querySelectorAll('.content-section');
+            let chartInstance = null;
+
+            const phaseProgress = [
+                { id: 'fase1', name: 'Fase 1: Estratégia', progress: 75 },
+                { id: 'fase2', name: 'Fase 2: Presença Digital', progress: 50 },
+                { id: 'fase3', name: 'Fase 3: Conteúdo', progress: 25 },
+                { id: 'fase4', name: 'Fase 4: Vendas', progress: 0 }
+            ];
+
+            function activateSection(targetId) {
+                navButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.target === targetId);
+                });
+                contentSections.forEach(section => {
+                    section.classList.toggle('active', section.id === targetId);
+                });
+
+                if (targetId === 'fase3' && !chartInstance) {
+                    renderChart();
+                }
+                if (targetId === 'evolucao') {
+                    renderProgressBars();
+                }
+            }
+            
+            function renderProgressBars() {
+                const container = document.getElementById('progress-container');
+                container.innerHTML = ''; 
+
+                phaseProgress.forEach((phase, index) => {
+                    const progressElement = document.createElement('div');
+                    progressElement.className = 'py-2';
+                    progressElement.innerHTML = `
+                        <div class="flex justify-between items-center mb-2">
+                            <label for="slider-${phase.id}" class="font-bold text-gray-700">${phase.name}</label>
+                            <span id="label-${phase.id}" class="text-sm font-semibold text-[#857262] w-12 text-right">${phase.progress}%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div id="bar-${phase.id}" class="progress-bar-fill" style="width: ${phase.progress}%;">${phase.progress}%</div>
+                        </div>
+                        <input type="range" id="slider-${phase.id}" min="0" max="100" value="${phase.progress}" class="mt-4 w-full cursor-pointer">
+                    `;
+                    container.appendChild(progressElement);
+
+                    const slider = document.getElementById(`slider-${phase.id}`);
+                    slider.addEventListener('input', (e) => {
+                        const newValue = e.target.value;
+                        phaseProgress[index].progress = parseInt(newValue);
+                        const bar = document.getElementById(`bar-${phase.id}`);
+                        const label = document.getElementById(`label-${phase.id}`);
+                        bar.style.width = `${newValue}%`;
+                        bar.textContent = `${newValue}%`;
+                        label.textContent = `${newValue}%`;
+                    });
+                });
+            }
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    activateSection(targetId);
+                });
+            });
+
+            function renderChart() {
+                const ctx = document.getElementById('contentPillarsChart').getContext('2d');
+                chartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Produto em Foco', 'Educação e Valor', 'Bastidores e Conexão', 'Prova Social'],
+                        datasets: [{
+                            label: 'Pilares de Conteúdo',
+                            data: [40, 30, 20, 10],
+                            backgroundColor: [
+                                '#D6C3B3',
+                                '#EFEBE7',
+                                '#857262',
+                                '#B0A193'
+                            ],
+                            borderColor: '#FFFFFF',
+                            borderWidth: 3,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: {
+                                        family: "'Inter', sans-serif"
+                                    },
+                                    boxWidth: 15,
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += context.parsed + '%';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '60%'
+                    }
+                });
+            }
+            
+            activateSection('fase1');
+        });
+    </script>
+</body>
+</html>
