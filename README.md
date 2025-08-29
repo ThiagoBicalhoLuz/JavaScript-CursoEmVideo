@@ -28,7 +28,7 @@ As principais tecnologias abordadas e utilizadas nos projetos são:
 
 ## 🎓 Sobre o Curso
 
-O [Curso de JavaScript do Curso em Vídeo](https://www.youtube.com/playlist?list=PLHz_AreHm4dlsK3Nr9GVvXCbpQyHQl1o1) é uma formação completa e gratuita que aborda desde os conceitos fundamentais da linguagem até a manipulação do DOM, eventos e funções avançadas. A didática do professor Gustavo Guanabara é um grande diferencial para o aprendizado.
+O [Curso de JavaScript do Curso em Vídeo](https://www.youtube.com/playlist?list=PLHz_AreHm4dlsK3Nr9GVvXCbpQyHQl1o1) é uma formação completa e gratuita que aborda desde os conceitos fundamentais da linguagem até a manipulação do DOM, eventos e funções avançadas. O professor Gustavo Guanabara é um grande referencial para mim e meus colegas de faculdade e trabalho.
 
 ## 👤 Autor
 
