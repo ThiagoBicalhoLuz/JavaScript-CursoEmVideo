@@ -12,11 +12,10 @@ O objetivo principal é documentar meu progresso e aprendizado, servindo como um
 
 O conteúdo está organizado em pastas, correspondendo diretamente às aulas e módulos do curso. Cada pasta `aulaXX` contém os arquivos e projetos desenvolvidos na respectiva lição.
 
--   **/aula04:** Primeiros scripts e comandos no console.
--   **/aula06:** Tratamento de dados e variáveis.
--   **/aula09:** Introdução ao DOM (Document Object Model).
+-   **/aula0*:** Praticas da aula.
+-   **/ex00*:** Exercicios.
 -   **/Img e anotações:** Materiais de apoio, imagens e anotações pessoais.
--   **/PlanoDeAcaoThaLuz:** Meu plano de estudos e metas pessoais para o curso.
+-   **/PlanoDeAcaoThaLuz:** Projeto de um site/loja.
 
 ## 🚀 Tecnologias Utilizadas
 
