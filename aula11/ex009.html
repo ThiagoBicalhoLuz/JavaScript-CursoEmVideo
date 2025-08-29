@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Condicionais com String</title>
+</head>
+<body>
+    <h1>Verificar Nacionalidade</h1>
+    <label for="txtnacionalidade">Qual país você nasceu?</label> 
+    <input type="text" name="txtnacionalidade" id="txtnacionalidade"> 
+    <input type="button" value="Verificar" onclick="confirmarnacionalidade()">
+    <div id="nac">
+        </div>
+
+    <script>
+        function confirmarnacionalidade() {
+            // Pega o elemento do input
+            var txtn = document.querySelector('input#txtnacionalidade')
+            // Pega o elemento da div de resultado
+            var nac = document.querySelector('div#nac')
+            // Pega o VALOR (o texto digitado) de dentro do input
+            var paisDeOrigem = txtn.value
+            
+            // CORREÇÃO: Usamos a variável 'nac' que criamos para a div            
+            // Mensagem inicial para confirmar o país digitado.
+            nac.innerHTML = `<p>Você nasceu em: <strong>${paisDeOrigem}</strong>.</p>`
+            
+            // CORREÇÃO 1: Comparar com a string 'Brasil' (com aspas).
+            if (paisDeOrigem.toUpperCase() == 'BRASIL') {
+            // Como funciona:
+            // 1. paisDeOrigem.toUpperCase() transforma "bRaSiL" em "BRASIL".
+            // 2. A comparação se torna: 'BRASIL' == 'BRASIL', que é VERDADEIRO.
+                nac.innerHTML += `<p>Portanto, você é <strong>Brasileiro</strong>!</p>`
+            } 
+            // CORREÇÃO 2: Usar 'else' para o caso contrário.
+            else {
+                nac.innerHTML += `<p>Portanto, você é <strong>Estrangeiro</strong>!</p>`
+            }
+        }
+    </script>
+</body>
+</html>
